@@ -13,6 +13,9 @@ repositories {
     mavenCentral()
 }
 
+kotlin {
+    jvmToolchain(17)
+}
 
 dependencies {
     // Core dependency - exposed to consumers
@@ -29,8 +32,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
 
     // Spring WebFlux - Optional dependency for Spring implementation
-    compileOnly("org.springframework:spring-webflux:6.2.0")
-    compileOnly("org.springframework:spring-context:6.2.0")
+    compileOnly("org.springframework:spring-webflux:6.2.14")
+    compileOnly("org.springframework:spring-context:6.2.14")
     compileOnly("io.projectreactor:reactor-core:3.7.0")
     compileOnly("io.projectreactor.kotlin:reactor-kotlin-extensions:1.2.3")
     compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.9.0")
