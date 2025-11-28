@@ -2,6 +2,10 @@
 
 A **framework-agnostic** Kotlin client library for the [OpenHolidays API](https://openholidaysapi.org), providing access to public and school holiday data for countries worldwide.
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=breezko/open-holiday-kotlin&type=date&legend=top-left)](https://www.star-history.com/#breezko/open-holiday-kotlin&type=date&legend=top-left)
+
 ## Design Philosophy
 
 This library follows a **framework-agnostic** architecture:
