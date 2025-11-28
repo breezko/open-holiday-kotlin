@@ -1,6 +1,5 @@
 package org.openholidays.spring
 
-import kotlinx.datetime.LocalDate
 import org.openholidays.HolidaysApiException
 import org.openholidays.HolidaysClient
 import org.openholidays.model.*
@@ -9,8 +8,7 @@ import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBody
 import org.springframework.web.reactive.function.client.awaitBodyOrNull
-import org.springframework.web.reactive.function.server.RequestPredicates.queryParam
-import reactor.core.publisher.Mono
+import java.time.LocalDate
 
 /**
  * Spring WebClient-based implementation of the HolidaysClient interface.

@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "dev.breezko"
-version = "1.0.1"
+version = "1.1.2"
 
 repositories {
     mavenCentral()
@@ -18,8 +18,7 @@ kotlin {
 }
 
 dependencies {
-    // Core dependency - exposed to consumers
-    api("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
+    // No API dependencies - only uses java.time from JDK
 
     // HTTP client - Ktor implementation (not exposed)
     implementation("io.ktor:ktor-client-core:3.1.1")
@@ -30,6 +29,9 @@ dependencies {
 
     // Serialization (internal use only)
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
+
+    // DateTime for Ktor serialization (internal use only)
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
 
     // Spring WebFlux - Optional dependency for Spring implementation
     compileOnly("org.springframework:spring-webflux:6.2.14")

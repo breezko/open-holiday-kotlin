@@ -1,7 +1,7 @@
 package org.openholidays
 
-import kotlinx.datetime.LocalDate
 import org.openholidays.model.*
+import java.time.LocalDate
 
 /**
  * Framework-agnostic interface for accessing the OpenHolidays API.

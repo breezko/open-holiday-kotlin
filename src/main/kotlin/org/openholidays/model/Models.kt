@@ -1,6 +1,6 @@
 package org.openholidays.model
 
-import kotlinx.datetime.LocalDate
+import java.time.LocalDate
 
 /**
  * Represents a text string with its associated language code.

@@ -1,10 +1,9 @@
 package org.openholidays.example.spring
 
 import kotlinx.coroutines.runBlocking
-import kotlinx.datetime.LocalDate
 import org.openholidays.HolidaysClient
 import org.openholidays.spring.SpringWebClientHolidaysClient
-import org.springframework.web.reactive.function.client.WebClient
+import java.time.LocalDate
 
 /**
  * Example demonstrating the usage of the Spring WebClient-based HolidaysClient.
@@ -67,8 +66,8 @@ fun main() = runBlocking {
         // Get French public holidays for 2025
         val holidays = client.getPublicHolidays(
             countryIsoCode = "FR",
-            validFrom = LocalDate.parse("2025-01-01"),
-            validTo = LocalDate.parse("2025-12-31"),
+            validFrom = LocalDate.of(2025, 1, 1),
+            validTo = LocalDate.of(2025, 12, 31),
             languageIsoCode = "FR"
         )
 

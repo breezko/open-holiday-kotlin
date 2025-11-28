@@ -1,9 +1,9 @@
 package org.openholidays.example
 
 import kotlinx.coroutines.runBlocking
-import kotlinx.datetime.LocalDate
 import org.openholidays.HolidaysClient
 import org.openholidays.ktor.KtorHolidaysClient
+import java.time.LocalDate
 
 /**
  * Example demonstrating the usage of the framework-agnostic HolidaysClient.
@@ -34,8 +34,8 @@ fun main() = runBlocking {
         // Get German public holidays for 2025
         val holidays = client.getPublicHolidays(
             countryIsoCode = "DE",
-            validFrom = LocalDate.parse("2025-01-01"),
-            validTo = LocalDate.parse("2025-12-31"),
+            validFrom = LocalDate.of(2025, 1, 1),
+            validTo = LocalDate.of(2025, 12, 31),
             languageIsoCode = "DE"
         )
 

@@ -1,6 +1,6 @@
 package org.openholidays.ktor
 
-import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDate as KotlinxLocalDate
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
@@ -10,20 +10,28 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import org.openholidays.model.*
+import java.time.LocalDate
 
 /**
  * Internal models for Ktor serialization.
  * These models map directly to the API JSON structure.
  */
 
-internal object LocalDateSerializer : KSerializer<LocalDate> {
+// Conversion utilities between java.time and kotlinx.datetime
+internal fun LocalDate.toKotlinx(): KotlinxLocalDate =
+    KotlinxLocalDate(this.year, this.monthValue, this.dayOfMonth)
+
+internal fun KotlinxLocalDate.toJava(): LocalDate =
+    LocalDate.of(this.year, this.monthNumber, this.dayOfMonth)
+
+internal object LocalDateSerializer : KSerializer<KotlinxLocalDate> {
     override val descriptor: SerialDescriptor =
         PrimitiveSerialDescriptor("LocalDate", PrimitiveKind.STRING)
 
-    override fun deserialize(decoder: Decoder): LocalDate =
-        LocalDate.parse(decoder.decodeString())
+    override fun deserialize(decoder: Decoder): KotlinxLocalDate =
+        KotlinxLocalDate.parse(decoder.decodeString())
 
-    override fun serialize(encoder: Encoder, value: LocalDate) {
+    override fun serialize(encoder: Encoder, value: KotlinxLocalDate) {
         encoder.encodeString(value.toString())
     }
 }
@@ -150,7 +158,7 @@ internal data class HolidayDto(
     val comment: List<LocalizedTextDto>? = null,
 
     @Serializable(with = LocalDateSerializer::class)
-    val endDate: LocalDate,
+    val endDate: KotlinxLocalDate,
 
     val id: String,
     val name: List<LocalizedTextDto>,
@@ -158,7 +166,7 @@ internal data class HolidayDto(
     val regionalScope: RegionalScopeDto? = null,
 
     @Serializable(with = LocalDateSerializer::class)
-    val startDate: LocalDate,
+    val startDate: KotlinxLocalDate,
 
     val subdivisions: List<SubdivisionReferenceDto>? = null,
     val groups: List<GroupReferenceDto>? = null,
@@ -184,10 +192,10 @@ internal data class HolidayByDateDto(
 @Serializable
 internal data class StatisticsDto(
     @Serializable(with = LocalDateSerializer::class)
-    val youngestStartDate: LocalDate,
+    val youngestStartDate: KotlinxLocalDate,
 
     @Serializable(with = LocalDateSerializer::class)
-    val oldestStartDate: LocalDate
+    val oldestStartDate: KotlinxLocalDate
 )
 
 @Serializable
@@ -271,12 +279,12 @@ internal fun TemporalScopeDto.toDomain() = when (this) {
 
 internal fun HolidayDto.toDomain() = Holiday(
     comment = comment?.map { it.toDomain() },
-    endDate = endDate,
+    endDate = endDate.toJava(),
     id = id,
     name = name.map { it.toDomain() },
     nationwide = nationwide,
     regionalScope = regionalScope?.toDomain(),
-    startDate = startDate,
+    startDate = startDate.toJava(),
     subdivisions = subdivisions?.map { it.toDomain() },
     groups = groups?.map { it.toDomain() },
     temporalScope = temporalScope?.toDomain(),
@@ -298,8 +306,8 @@ internal fun HolidayByDateDto.toDomain() = HolidayByDate(
 )
 
 internal fun StatisticsDto.toDomain() = Statistics(
-    youngestStartDate = youngestStartDate,
-    oldestStartDate = oldestStartDate
+    youngestStartDate = youngestStartDate.toJava(),
+    oldestStartDate = oldestStartDate.toJava()
 )
 
 internal fun ProblemDetailsDto.toDomain() = ProblemDetails(

@@ -27,18 +27,20 @@ Add the dependency to your `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation("dev.breezko:open-holiday-kotlin:<version>")
+    implementation("dev.breezko:open-holiday-kotlin:1.0.1")
     
     // Choose your HTTP client implementation:
     // For Ktor (included by default)
     // No additional dependencies needed - Ktor is bundled
     
-    // For Spring WebClient (optional)
-    implementation("org.springframework:spring-webflux:<version>")
+    // For Spring WebClient (optional - already included if using Spring Boot with WebFlux)
+    implementation("org.springframework:spring-webflux:6.2.0")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions:1.2.3")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.9.0")
 }
 ```
+
+**Note**: The library uses `java.time.LocalDate` from the JDK, so there are no additional date/time dependencies required. This makes it compatible with all JVM frameworks including Spring, Ktor, Micronaut, Quarkus, etc.
 
 ## Quick Start
 
@@ -47,15 +49,15 @@ dependencies {
 ```kotlin
 import org.openholidays.HolidaysClient
 import org.openholidays.ktor.KtorHolidaysClient
-import kotlinx.datetime.LocalDate
+import java.time.LocalDate
 
 val client: HolidaysClient = KtorHolidaysClient.create()
 
 try {
     val holidays = client.getPublicHolidays(
         countryIsoCode = "US",
-        validFrom = LocalDate(2025, 1, 1),
-        validTo = LocalDate(2025, 12, 31),
+        validFrom = LocalDate.of(2025, 1, 1),
+        validTo = LocalDate.of(2025, 12, 31),
         languageIsoCode = "EN"
     )
     
@@ -92,8 +94,8 @@ class HolidayService(private val holidaysClient: HolidaysClient) {
     suspend fun getHolidays(country: String): List<Holiday> {
         return holidaysClient.getPublicHolidays(
             countryIsoCode = country,
-            validFrom = LocalDate(2025, 1, 1),
-            validTo = LocalDate(2025, 12, 31)
+            validFrom = LocalDate.of(2025, 1, 1),
+            validTo = LocalDate.of(2025, 12, 31)
         )
     }
 }
@@ -208,7 +210,7 @@ See the `src/main/kotlin/org/openholidays/example` directory for complete exampl
 │     HolidaysClient Interface            │
 │     (Framework-agnostic)                │
 │  + Plain Kotlin data classes            │
-│  + kotlinx-datetime only                │
+│  + java.time.LocalDate only             │
 └────────────┬────────────────────────────┘
              │ implemented by
        ┌─────┴──────┐
@@ -222,8 +224,8 @@ See the `src/main/kotlin/org/openholidays/example` directory for complete exampl
 ## Requirements
 
 - Kotlin 1.9+
-- JVM 11+
-- kotlinx-datetime
+- JVM 17+ (for the library itself; JVM 11+ if you provide your own Spring dependencies)
+- Uses `java.time.LocalDate` from JDK (no external date/time dependencies)
 - (Optional) Ktor 3.1+ or Spring WebFlux 6.2+
 
 ## License
