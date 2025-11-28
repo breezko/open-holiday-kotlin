@@ -43,3 +43,8 @@ bin/
 .idea
 ### Mac OS ###
 .DS_Store
+
+### Security - Never commit these! ###
+local.env
+gradle.properties.local
+
