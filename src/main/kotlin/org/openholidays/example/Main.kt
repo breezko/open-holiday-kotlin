@@ -3,7 +3,18 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.LocalDate
 import org.openholidays.OpenHolidaysClient
 
+/**
+ * Example demonstrating the usage of the OpenHolidaysClient.
+ *
+ * This example shows how to:
+ * 1. Create a client instance
+ * 2. Retrieve supported countries with localized names
+ * 3. Query public holidays for a specific country and date range
+ * 4. Extract localized holiday names from the response
+ * 5. Properly close the client to release resources
+ */
 fun main() = runBlocking {
+    // Create a new client instance with default configuration
     val client = OpenHolidaysClient.create()
 
     try {
@@ -25,12 +36,12 @@ fun main() = runBlocking {
         )
 
         println("\nDE public holidays in 2025:")
-        println(holidays)
         holidays.forEach { h ->
             val deName = h.name.firstOrNull { n -> n.language.equals("DE", ignoreCase = true) }?.text
             println("${h.startDate} – ${deName ?: h.name.firstOrNull()?.text}")
         }
     } finally {
+        // Always close the client to release resources
         client.close()
     }
 }
