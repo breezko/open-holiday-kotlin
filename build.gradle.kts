@@ -1,13 +1,14 @@
+import org.gradle.api.tasks.bundling.Zip
 
 plugins {
     kotlin("jvm") version "2.2.21"
     kotlin("plugin.serialization") version "2.2.21"
-    application
     `maven-publish`
+    signing
 }
 
-group = "dev.breezko"
-version = "1.2.4"
+group = "io.github.breezko"
+version = "1.3.0"
 
 repositories {
     mavenCentral()
@@ -18,7 +19,6 @@ kotlin {
 }
 
 dependencies {
-
     // HTTP client - Ktor implementation
     implementation("io.ktor:ktor-client-core:3.1.1")
     implementation("io.ktor:ktor-client-cio:3.1.1")
@@ -46,24 +46,67 @@ dependencies {
 }
 
 java {
-    withJavadocJar()
     withSourcesJar()
+    withJavadocJar()
+}
+
+tasks.register<Zip>("packageForSonatype") {
+    group = "publishing"
+    description = "Packages artifacts for Sonatype Central Portal upload"
+
+    dependsOn("publishMavenJavaPublicationToCentralPortalRepository")
+
+    val artifactVersion = version.toString()
+    val repoDir = layout.buildDirectory.dir("central-portal-repo")
+
+    from(repoDir) {
+        include("io/github/breezko/open-holiday-kotlin/$artifactVersion/**")
+    }
+
+    archiveFileName.set("open-holiday-kotlin-$artifactVersion.zip")
+    destinationDirectory.set(layout.buildDirectory)
 }
 
 publishing {
     publications {
-        create<MavenPublication>("maven") {
+        create<MavenPublication>("mavenJava") {
             from(components["java"])
+            artifactId = "open-holiday-kotlin"
 
             pom {
                 name.set("Open Holiday Kotlin Client")
                 description.set("Kotlin client library for Open Holiday API")
                 url.set("https://github.com/breezko/open-holiday-kotlin")
+
+                licenses {
+                    license {
+                        name.set("MIT License")
+                        url.set("https://opensource.org/licenses/MIT")
+                    }
+                }
+                developers {
+                    developer {
+                        id.set("breezko")
+                        name.set("Hendrik Heim")
+                        email.set("hendrik@breezko.dev")
+                    }
+                }
+                scm {
+                    connection.set("scm:git:git://github.com/breezko/open-holiday-kotlin.git")
+                    developerConnection.set("scm:git:ssh://git@github.com:breezko/open-holiday-kotlin.git")
+                    url.set("https://github.com/breezko/open-holiday-kotlin")
+                }
             }
         }
     }
 
     repositories {
+        maven {
+            name = "centralPortal"
+            url = uri(layout.buildDirectory.dir("central-portal-repo"))
+        }
+
+        // Optional: keep GitHub Packages
         maven {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/breezko/open-holiday-kotlin")
@@ -73,4 +116,9 @@ publishing {
             }
         }
     }
+}
+
+signing {
+    useGpgCmd()
+    sign(publishing.publications["mavenJava"])
 }

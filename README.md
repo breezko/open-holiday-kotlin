@@ -27,7 +27,7 @@ Add the dependency to your `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation("dev.breezko:open-holiday-kotlin:1.0.1")
+    implementation("io.github.breezko:open-holiday-kotlin:1.3.0")
     
     // Choose your HTTP client implementation:
     // For Ktor (included by default)
@@ -230,7 +230,19 @@ See the `src/main/kotlin/org/openholidays/example` directory for complete exampl
 
 ## License
 
-TBD
+MIT-License
+
+## Signing
+
+Generating the artifact
+```bash
+ ./gradlew clean publishMavenJavaPublicationToCentralPortalRepository
+ ```
+
+Packaging
+```bash
+./gradlew packageForSonatype
+```
 
 ## Contributing
 
