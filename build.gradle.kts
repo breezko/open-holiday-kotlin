@@ -1,9 +1,9 @@
+
 plugins {
     kotlin("jvm") version "2.2.21"
     kotlin("plugin.serialization") version "2.2.21"
+    application
     `maven-publish`
-    signing
-    id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
 }
 
 group = "dev.breezko"
@@ -13,17 +13,27 @@ repositories {
     mavenCentral()
 }
 
+
 dependencies {
-    // Ktor client
+    // Core dependency - exposed to consumers
+    api("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
+
+    // HTTP client - Ktor implementation (not exposed)
     implementation("io.ktor:ktor-client-core:3.1.1")
     implementation("io.ktor:ktor-client-cio:3.1.1")
     implementation("io.ktor:ktor-client-content-negotiation:3.1.1")
     implementation("io.ktor:ktor-serialization-kotlinx-json:3.1.1")
     implementation("io.ktor:ktor-client-logging:3.1.1")
 
-    // Serialization & datetime
+    // Serialization (internal use only)
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
+
+    // Spring WebFlux - Optional dependency for Spring implementation
+    compileOnly("org.springframework:spring-webflux:6.2.0")
+    compileOnly("org.springframework:spring-context:6.2.0")
+    compileOnly("io.projectreactor:reactor-core:3.7.0")
+    compileOnly("io.projectreactor.kotlin:reactor-kotlin-extensions:1.2.3")
+    compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.9.0")
 }
 
 java {

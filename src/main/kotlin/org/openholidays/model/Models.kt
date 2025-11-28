@@ -1,39 +1,6 @@
 package org.openholidays.model
 
-
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.toLocalDate
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.descriptors.PrimitiveKind
-import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
-
-// --- Date serializer (ISO-8601, e.g. 2023-01-01) ---
-
-/**
- * Custom serializer for kotlinx.datetime.LocalDate.
- *
- * Serializes and deserializes dates in ISO-8601 format (yyyy-MM-dd).
- * This ensures dates are properly handled in JSON responses from the OpenHolidays API.
- */
-object LocalDateSerializer : KSerializer<LocalDate> {
-    override val descriptor: SerialDescriptor =
-        PrimitiveSerialDescriptor("LocalDate", PrimitiveKind.STRING)
-
-    override fun deserialize(decoder: Decoder): LocalDate =
-        LocalDate.parse(decoder.decodeString())
-
-    override fun serialize(encoder: Encoder, value: LocalDate) {
-        // LocalDate.toString() -> "yyyy-MM-dd"
-        encoder.encodeString(value.toString())
-    }
-}
-
-// --- Core value objects ---
 
 /**
  * Represents a text string with its associated language code.
@@ -43,7 +10,6 @@ object LocalDateSerializer : KSerializer<LocalDate> {
  * @property language ISO 639-1 language code (e.g., "EN", "DE", "FR")
  * @property text The localized text content
  */
-@Serializable
 data class LocalizedText(
     val language: String,
     val text: String
@@ -54,7 +20,6 @@ data class LocalizedText(
  *
  * @property isoCode ISO 3166-1 alpha-2 country code (e.g., "US", "DE", "FR")
  */
-@Serializable
 data class CountryReference(
     val isoCode: String
 )
@@ -65,7 +30,6 @@ data class CountryReference(
  * @property code The subdivision code
  * @property shortName Short name or abbreviation of the subdivision
  */
-@Serializable
 data class SubdivisionReference(
     val code: String,
     val shortName: String
@@ -77,13 +41,10 @@ data class SubdivisionReference(
  * @property code The group code
  * @property shortName Short name or abbreviation of the group
  */
-@Serializable
 data class GroupReference(
     val code: String,
     val shortName: String
 )
-
-// --- Country, language, region models ---
 
 /**
  * Represents a country with its basic information.
@@ -92,8 +53,7 @@ data class GroupReference(
  * @property name Localized names of the country in different languages
  * @property officialLanguages List of official language codes for this country
  */
-@Serializable
-data class CountryResponse(
+data class Country(
     val isoCode: String,
     val name: List<LocalizedText>,
     val officialLanguages: List<String>
@@ -105,8 +65,7 @@ data class CountryResponse(
  * @property isoCode ISO 639-1 language code
  * @property name Localized names of the language in different languages
  */
-@Serializable
-data class LanguageResponse(
+data class Language(
     val isoCode: String,
     val name: List<LocalizedText>
 )
@@ -124,10 +83,9 @@ data class LanguageResponse(
  * @property shortName Short name or abbreviation
  * @property subdivisions Optional list of subdivisions this group applies to
  */
-@Serializable
-data class GroupResponse(
+data class Group(
     val category: List<LocalizedText>,
-    val children: List<GroupResponse>? = null,
+    val children: List<Group>? = null,
     val code: String,
     val comment: List<LocalizedText>? = null,
     val name: List<LocalizedText>,
@@ -150,10 +108,9 @@ data class GroupResponse(
  * @property officialLanguages List of official language codes for this subdivision
  * @property shortName Short name or abbreviation
  */
-@Serializable
-data class SubdivisionResponse(
+data class Subdivision(
     val category: List<LocalizedText>,
-    val children: List<SubdivisionResponse>? = null,
+    val children: List<Subdivision>? = null,
     val code: String,
     val comment: List<LocalizedText>? = null,
     val groups: List<GroupReference>? = null,
@@ -163,97 +120,44 @@ data class SubdivisionResponse(
     val shortName: String
 )
 
-// --- Enums ---
-
 /**
  * Tags that provide additional metadata about holidays.
- *
- * - RECOMMENDED: Recommended holiday observance
- * - PROVISIONAL: Provisional or tentative holiday
- * - ONE_TIME: One-time or special holiday
- * - EXCEPTION: Exception to normal holiday rules
  */
-@Serializable
 enum class HolidayTags {
-    @SerialName("Recommended")
     RECOMMENDED,
-
-    @SerialName("Provisional")
     PROVISIONAL,
-
-    @SerialName("OneTime")
     ONE_TIME,
-
-    @SerialName("Exception")
     EXCEPTION
 }
 
 /**
  * Types of holidays recognized by the OpenHolidays API.
- *
- * - PUBLIC: Public or national holiday
- * - BANK: Bank holiday
- * - OPTIONAL: Optional or observance holiday
- * - SCHOOL: School holiday/break
- * - BACK_TO_SCHOOL: Start of school term
- * - END_OF_LESSONS: End of school lessons
  */
-@Serializable
 enum class HolidayType {
-    @SerialName("Public")
     PUBLIC,
-
-    @SerialName("Bank")
     BANK,
-
-    @SerialName("Optional")
     OPTIONAL,
-
-    @SerialName("School")
     SCHOOL,
-
-    @SerialName("BackToSchool")
     BACK_TO_SCHOOL,
-
-    @SerialName("EndOfLessons")
     END_OF_LESSONS
 }
 
 /**
  * Geographic scope of a holiday.
- *
- * - NATIONAL: Observed throughout the entire country
- * - REGIONAL: Observed in specific regions or subdivisions
- * - LOCAL: Observed in specific local areas
  */
-@Serializable
 enum class RegionalScope {
-    @SerialName("National")
     NATIONAL,
-
-    @SerialName("Regional")
     REGIONAL,
-
-    @SerialName("Local")
     LOCAL
 }
 
 /**
  * Time scope or duration of a holiday.
- *
- * - FULL_DAY: Entire day holiday
- * - HALF_DAY: Half-day holiday or partial observance
  */
-@Serializable
 enum class TemporalScope {
-    @SerialName("FullDay")
     FULL_DAY,
-
-    @SerialName("HalfDay")
     HALF_DAY
 }
-
-// --- Holiday models ---
 
 /**
  * Represents a holiday with all its details.
@@ -273,21 +177,14 @@ enum class TemporalScope {
  * @property temporalScope Duration scope (full-day or half-day)
  * @property type Type of holiday (public, bank, school, etc.)
  */
-@Serializable
-data class HolidayResponse(
+data class Holiday(
     val comment: List<LocalizedText>? = null,
-
-    @Serializable(with = LocalDateSerializer::class)
     val endDate: LocalDate,
-
     val id: String,
     val name: List<LocalizedText>,
     val nationwide: Boolean,
     val regionalScope: RegionalScope? = null,
-
-    @Serializable(with = LocalDateSerializer::class)
     val startDate: LocalDate,
-
     val subdivisions: List<SubdivisionReference>? = null,
     val groups: List<GroupReference>? = null,
     val temporalScope: TemporalScope? = null,
@@ -312,8 +209,7 @@ data class HolidayResponse(
  * @property temporalScope Duration scope (full-day or half-day)
  * @property type Type of holiday (public, bank, school, etc.)
  */
-@Serializable
-data class HolidayByDateResponse(
+data class HolidayByDate(
     val comment: List<LocalizedText>? = null,
     val country: CountryReference,
     val groups: List<GroupReference>? = null,
@@ -327,8 +223,6 @@ data class HolidayByDateResponse(
     val type: HolidayType
 )
 
-// --- Statistics ---
-
 /**
  * Represents statistics about holidays in the dataset.
  *
@@ -337,16 +231,10 @@ data class HolidayByDateResponse(
  * @property youngestStartDate The most recent start date in the dataset
  * @property oldestStartDate The oldest start date in the dataset
  */
-@Serializable
-data class StatisticsResponse(
-    @Serializable(with = LocalDateSerializer::class)
+data class Statistics(
     val youngestStartDate: LocalDate,
-
-    @Serializable(with = LocalDateSerializer::class)
     val oldestStartDate: LocalDate
 )
-
-// --- Problem details for error responses ---
 
 /**
  * RFC 7807 Problem Details for HTTP APIs.
@@ -359,7 +247,6 @@ data class StatisticsResponse(
  * @property detail Human-readable explanation specific to this occurrence
  * @property instance URI reference identifying the specific occurrence of the problem
  */
-@Serializable
 data class ProblemDetails(
     val type: String? = null,
     val title: String? = null,
@@ -367,3 +254,4 @@ data class ProblemDetails(
     val detail: String? = null,
     val instance: String? = null
 )
+
