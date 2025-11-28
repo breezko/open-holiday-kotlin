@@ -1,10 +1,17 @@
 package org.openholidays.spring
 
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.openholidays.HolidaysApiException
 import org.openholidays.HolidaysClient
 import org.openholidays.model.*
 import org.springframework.http.HttpStatusCode
 import org.springframework.http.MediaType
+import org.springframework.http.codec.json.Jackson2JsonDecoder
+import org.springframework.http.codec.json.Jackson2JsonEncoder
+import org.springframework.web.reactive.function.client.ExchangeStrategies
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBody
 import org.springframework.web.reactive.function.client.awaitBodyOrNull
@@ -55,7 +62,7 @@ class SpringWebClientHolidaysClient private constructor(
          *
          * The default client is configured with:
          * - Base URL pointing to the OpenHolidays API
-         * - JSON content type handling
+         * - Jackson JSON codec with Kotlin and JSR-310 (Java 8 Time) support
          * - Appropriate timeout settings
          *
          * @param baseUrl The base URL for the API (defaults to https://openholidaysapi.org)
@@ -66,8 +73,29 @@ class SpringWebClientHolidaysClient private constructor(
             baseUrl: String = DEFAULT_BASE_URL,
             webClientBuilder: WebClient.Builder = WebClient.builder()
         ): SpringWebClientHolidaysClient {
+            // Configure Jackson ObjectMapper with Kotlin and Java Time support
+            val objectMapper: ObjectMapper = jacksonObjectMapper().apply {
+                registerModule(JavaTimeModule())
+                configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+            }
+
+            // Configure exchange strategies with Jackson codecs
+            val strategies = ExchangeStrategies.builder()
+                .codecs { configurer ->
+                    configurer.defaultCodecs().jackson2JsonEncoder(
+                        Jackson2JsonEncoder(objectMapper, MediaType.APPLICATION_JSON)
+                    )
+                    configurer.defaultCodecs().jackson2JsonDecoder(
+                        Jackson2JsonDecoder(objectMapper, MediaType.APPLICATION_JSON)
+                    )
+                    // Increase max in-memory size if needed
+                    configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
+                }
+                .build()
+
             val webClient = webClientBuilder
                 .baseUrl(baseUrl.trimEnd('/'))
+                .exchangeStrategies(strategies)
                 .defaultHeader("Accept", MediaType.APPLICATION_JSON_VALUE)
                 .build()
 

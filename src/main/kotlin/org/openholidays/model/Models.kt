@@ -124,9 +124,16 @@ data class Subdivision(
  * Tags that provide additional metadata about holidays.
  */
 enum class HolidayTags {
+    @com.fasterxml.jackson.annotation.JsonProperty("Recommended")
     RECOMMENDED,
+
+    @com.fasterxml.jackson.annotation.JsonProperty("Provisional")
     PROVISIONAL,
+
+    @com.fasterxml.jackson.annotation.JsonProperty("OneTime")
     ONE_TIME,
+
+    @com.fasterxml.jackson.annotation.JsonProperty("Exception")
     EXCEPTION
 }
 
@@ -134,11 +141,22 @@ enum class HolidayTags {
  * Types of holidays recognized by the OpenHolidays API.
  */
 enum class HolidayType {
+    @com.fasterxml.jackson.annotation.JsonProperty("Public")
     PUBLIC,
+
+    @com.fasterxml.jackson.annotation.JsonProperty("Bank")
     BANK,
+
+    @com.fasterxml.jackson.annotation.JsonProperty("Optional")
     OPTIONAL,
+
+    @com.fasterxml.jackson.annotation.JsonProperty("School")
     SCHOOL,
+
+    @com.fasterxml.jackson.annotation.JsonProperty("BackToSchool")
     BACK_TO_SCHOOL,
+
+    @com.fasterxml.jackson.annotation.JsonProperty("EndOfLessons")
     END_OF_LESSONS
 }
 
@@ -146,8 +164,13 @@ enum class HolidayType {
  * Geographic scope of a holiday.
  */
 enum class RegionalScope {
+    @com.fasterxml.jackson.annotation.JsonProperty("National")
     NATIONAL,
+
+    @com.fasterxml.jackson.annotation.JsonProperty("Regional")
     REGIONAL,
+
+    @com.fasterxml.jackson.annotation.JsonProperty("Local")
     LOCAL
 }
 
@@ -155,7 +178,10 @@ enum class RegionalScope {
  * Time scope or duration of a holiday.
  */
 enum class TemporalScope {
+    @com.fasterxml.jackson.annotation.JsonProperty("FullDay")
     FULL_DAY,
+
+    @com.fasterxml.jackson.annotation.JsonProperty("HalfDay")
     HALF_DAY
 }
 

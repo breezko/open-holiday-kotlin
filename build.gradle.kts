@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "dev.breezko"
-version = "1.1.2"
+version = "1.2.4"
 
 repositories {
     mavenCentral()
@@ -18,27 +18,31 @@ kotlin {
 }
 
 dependencies {
-    // No API dependencies - only uses java.time from JDK
 
-    // HTTP client - Ktor implementation (not exposed)
+    // HTTP client - Ktor implementation
     implementation("io.ktor:ktor-client-core:3.1.1")
     implementation("io.ktor:ktor-client-cio:3.1.1")
     implementation("io.ktor:ktor-client-content-negotiation:3.1.1")
     implementation("io.ktor:ktor-serialization-kotlinx-json:3.1.1")
     implementation("io.ktor:ktor-client-logging:3.1.1")
 
-    // Serialization (internal use only)
+    // Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
+    implementation("org.springframework:spring-webflux:6.2.14")
 
-    // DateTime for Ktor serialization (internal use only)
+    // DateTime for Ktor serialization support
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
 
-    // Spring WebFlux - Optional dependency for Spring implementation
-    compileOnly("org.springframework:spring-webflux:6.2.14")
-    compileOnly("org.springframework:spring-context:6.2.14")
-    compileOnly("io.projectreactor:reactor-core:3.7.0")
-    compileOnly("io.projectreactor.kotlin:reactor-kotlin-extensions:1.2.3")
-    compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.9.0")
+    // Spring WebFlux - Spring implementation
+    implementation("org.springframework:spring-context:6.2.14")
+    implementation("io.projectreactor:reactor-core:3.7.0")
+    implementation("io.projectreactor.kotlin:reactor-kotlin-extensions:1.2.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.9.0")
+
+    // Jackson for Spring WebClient JSON processing
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.18.2")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.2")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.2")
 }
 
 java {
