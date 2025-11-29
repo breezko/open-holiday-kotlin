@@ -1,6 +1,24 @@
-# Open Holiday Kotlin Client
+# OpenHolidays Kotlin Client
 
-A **framework-agnostic** Kotlin client library for the [OpenHolidays API](https://openholidaysapi.org), providing access to public and school holiday data for countries worldwide.
+A **framework-agnostic Kotlin / JVM and Java client** for the [OpenHolidays API](https://openholidaysapi.org), providing easy access to **public holidays** and **school holidays** for countries worldwide.  
+Works seamlessly with **Spring Boot**, **Ktor**, and any other JVM framework.
+
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.breezko/open-holiday-kotlin-core)](https://central.sonatype.com/artifact/io.github.breezko/open-holiday-kotlin-core)
+![Kotlin](https://img.shields.io/badge/Kotlin-1.9%2B-blue)
+![JVM](https://img.shields.io/badge/JVM-17%2B-blue)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
+
+## Star History
+
+<img src="https://api.star-history.com/svg?repos=breezko/open-holiday-kotlin&type=Date"><img>
+
+## What does this library do?
+
+- Provides a **type-safe Kotlin wrapper** around the OpenHolidays REST API
+- Supports both **public holidays** and **school holidays**
+- Covers countries, languages, subdivisions (states/provinces), and groups (school types)
+- Works in any **Kotlin / JVM** project (Spring Boot, Ktor, Micronaut, Quarkus, plain Kotlin)
+- Ships with **Ktor** and **Spring WebClient** implementations – or plug in your own HTTP client
 
 ## Star History
 
