@@ -20,9 +20,7 @@ Artifacts are published per flavor so you only pull the dependencies you need.
 - `io.github.breezko:open-holiday-kotlin-ktor` – Ktor-powered client (depends on `core`)
 - `io.github.breezko:open-holiday-kotlin-spring` – Spring WebClient implementation (depends on `core`)
 
-Latest releases are available via Maven Central or mirrors such as:
-https://mvnrepository.com/artifact/io.github.breezko/open-holiday-kotlin-core
-
+## Installation
 ### Maven
 ```bash
 <!-- Core -->
