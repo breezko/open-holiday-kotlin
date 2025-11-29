@@ -6,6 +6,27 @@ A **framework-agnostic** Kotlin client library for the [OpenHolidays API](https:
 
 <img src="https://api.star-history.com/svg?repos=breezko/open-holiday-kotlin&type=Date"><img>
 
+## Dependency
+
+https://mvnrepository.com/artifact/io.github.breezko/open-holiday-kotlin (or similar mirrors)
+
+### Maven
+```bash
+<!-- https://mvnrepository.com/artifact/io.github.breezko/open-holiday-kotlin -->
+<dependency>
+    <groupId>io.github.breezko</groupId>
+    <artifactId>open-holiday-kotlin</artifactId>
+    <version><version></version>
+</dependency>
+```
+
+### Gradle
+
+```bash
+// https://mvnrepository.com/artifact/io.github.breezko/open-holiday-kotlin
+implementation("io.github.breezko:open-holiday-kotlin:<version>")
+```
+
 ## Design Philosophy
 
 This library follows a **framework-agnostic** architecture:
