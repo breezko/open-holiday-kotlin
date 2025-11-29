@@ -6,25 +6,47 @@ A **framework-agnostic** Kotlin client library for the [OpenHolidays API](https:
 
 <img src="https://api.star-history.com/svg?repos=breezko/open-holiday-kotlin&type=Date"><img>
 
-## Dependency
+## Modules & Dependency Coordinates
 
-https://mvnrepository.com/artifact/io.github.breezko/open-holiday-kotlin (or similar mirrors)
+Artifacts are published per flavor so you only pull the dependencies you need.
+
+- `io.github.breezko:open-holiday-kotlin-core` – interfaces + models (no HTTP stack)
+- `io.github.breezko:open-holiday-kotlin-ktor` – Ktor-powered client (depends on `core`)
+- `io.github.breezko:open-holiday-kotlin-spring` – Spring WebClient implementation (depends on `core`)
+
+Latest releases are available via Maven Central or mirrors such as:
+https://mvnrepository.com/artifact/io.github.breezko/open-holiday-kotlin-core
 
 ### Maven
 ```bash
-<!-- https://mvnrepository.com/artifact/io.github.breezko/open-holiday-kotlin -->
+<!-- Core -->
 <dependency>
     <groupId>io.github.breezko</groupId>
-    <artifactId>open-holiday-kotlin</artifactId>
-    <version><version></version>
+    <artifactId>open-holiday-kotlin-core</artifactId>
+    <version>${openHoliday.version}</version>
+</dependency>
+
+<!-- Ktor client -->
+<dependency>
+    <groupId>io.github.breezko</groupId>
+    <artifactId>open-holiday-kotlin-ktor</artifactId>
+    <version>${openHoliday.version}</version>
+</dependency>
+
+<!-- Spring WebClient -->
+<dependency>
+    <groupId>io.github.breezko</groupId>
+    <artifactId>open-holiday-kotlin-spring</artifactId>
+    <version>${openHoliday.version}</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```bash
-// https://mvnrepository.com/artifact/io.github.breezko/open-holiday-kotlin
-implementation("io.github.breezko:open-holiday-kotlin:<version>")
+implementation("io.github.breezko:open-holiday-kotlin-core:<version>")
+implementation("io.github.breezko:open-holiday-kotlin-ktor:<version>")   // Ktor flavor
+implementation("io.github.breezko:open-holiday-kotlin-spring:<version>") // Spring flavor
 ```
 
 ## Design Philosophy
@@ -52,22 +74,20 @@ Add the dependency to your `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation("io.github.breezko:open-holiday-kotlin:1.3.0")
-    
-    // Choose your HTTP client implementation:
-    // For Ktor (included by default)
-    // No additional dependencies needed - Ktor is bundled
-    
-    // For Spring WebClient (optional - already included if using Spring Boot with WebFlux)
-    implementation("org.springframework:spring-webflux:6.2.0")
-    implementation("io.projectreactor.kotlin:reactor-kotlin-extensions:1.2.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.9.0")
+    implementation("io.github.breezko:open-holiday-kotlin-core:1.3.0")
+
+    // Pick one (or both) concrete implementations:
+    implementation("io.github.breezko:open-holiday-kotlin-ktor:1.3.0")
+    // or
+    implementation("io.github.breezko:open-holiday-kotlin-spring:1.3.0")
 }
 ```
 
 **Note**: The library uses `java.time.LocalDate` from the JDK, so there are no additional date/time dependencies required. This makes it compatible with all JVM frameworks including Spring, Ktor, Micronaut, Quarkus, etc.
 
 ## Quick Start
+
+Sample implementations at samples-directory.
 
 ### Using Ktor Implementation
 
@@ -218,9 +238,9 @@ class MyCustomHolidaysClient(
 
 ## Examples
 
-See the `src/main/kotlin/org/openholidays/example` directory for complete examples:
-- `Main.kt` - Ktor implementation example
-- `spring/SpringExample.kt` - Spring WebClient example with Spring Boot integration patterns
+See the `samples/` folder for runnable Gradle projects:
+- `samples/ktor-sample` – CLI app hitting the API via the Ktor client
+- `samples/spring-sample` – coroutine-based sample using the Spring WebClient flavor
 
 ## Architecture
 
