@@ -12,18 +12,6 @@ Works seamlessly with **Spring Boot**, **Ktor**, and any other JVM framework.
 
 <img src="https://api.star-history.com/svg?repos=breezko/open-holiday-kotlin&type=Date"><img>
 
-## What does this library do?
-
-- Provides a **type-safe Kotlin wrapper** around the OpenHolidays REST API
-- Supports both **public holidays** and **school holidays**
-- Covers countries, languages, subdivisions (states/provinces), and groups (school types)
-- Works in any **Kotlin / JVM** project (Spring Boot, Ktor, Micronaut, Quarkus, plain Kotlin)
-- Ships with **Ktor** and **Spring WebClient** implementations – or plug in your own HTTP client
-
-## Star History
-
-<img src="https://api.star-history.com/svg?repos=breezko/open-holiday-kotlin&type=Date"><img>
-
 ## Modules & Dependency Coordinates
 
 Artifacts are published per flavor so you only pull the dependencies you need.
